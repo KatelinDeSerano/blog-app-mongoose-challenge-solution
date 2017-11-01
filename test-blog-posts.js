@@ -161,5 +161,22 @@ describe('blog posts API resource', function() {
         });
     });
 
-    
-})
+    describe('DELETE endpoint', function() {
+        it('should delete a post by id', function() {
+          let post;
+          return BlogPost
+            .findOne()
+            .then(_post => {
+              post = _post;
+              return chai.request(app).delete(`/posts/${post.id}`);
+            })
+            .then(res => {
+              res.should.have.status(204);
+              return BlogPost.findById(post.id);
+            })
+            .then(_post => {
+              should.not.exist(_post);
+            });
+        });
+      });
+});
